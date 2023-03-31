@@ -45,4 +45,5 @@ public:
     std::string getString(std::string key);
     char getChar(std::string key);
     int getInt(std::string key);
+    bool getBool(std::string key);
 };

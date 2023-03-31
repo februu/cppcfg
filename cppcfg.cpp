@@ -60,7 +60,7 @@ bool ConfigurationFile::parseLine(std::string line)
         }
 
         // Checks if key only contains a-z,A-Z,0-9.
-        if (!((line[charCount] > 47 && line[charCount] < 58) || (line[charCount] > 64 && line[charCount] < 91) || (line[charCount] > 96 && line[charCount] < 123)))
+        if (!((line[charCount] > 47 && line[charCount] < 58) || (line[charCount] > 64 && line[charCount] < 91) || (line[charCount] > 96 && line[charCount] < 123) || line[charCount] == 95))
             return false;
 
         key += line[charCount];
@@ -109,6 +109,8 @@ bool ConfigurationFile::parseLine(std::string line)
         // String
         else if (value[0] == '"' && value[valueCharCount - 1] == '"')
         {
+            value.erase(valueCharCount - 1);
+            value.erase(0, 1);
             strings[key] = value;
             return true;
         }
@@ -156,3 +158,4 @@ float ConfigurationFile::getFloat(std::string key) { return floats[key]; }
 std::string ConfigurationFile::getString(std::string key) { return strings[key]; }
 char ConfigurationFile::getChar(std::string key) { return chars[key]; }
 int ConfigurationFile::getInt(std::string key) { return integers[key]; }
+bool ConfigurationFile::getBool(std::string key) { return bools[key]; }
