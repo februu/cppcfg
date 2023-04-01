@@ -4,17 +4,36 @@
 
 ## About 📘
 
-**Hey!** I always had a need to be able to add config files to my programs. I just like to have an ability to change some values in file and see the program process them in many different ways. But this always meant that I had to write myself a .cfg file parser to load those values... So I decided to make this library.This is my first C++ library released publicly so it might be kinda bad but I will try to improve it as I progress with my coding skills lmao.
+**Hey!** I always had a need to be able to add config files to my programs. I just like to have an ability to change some values in file and see the program process them in many different ways. But this always meant that I had to write myself a .cfg file parser to load those values... So I decided to make this library. This is my first C++ library released publicly so it might be kinda bad but I will try to improve it as I progress with my coding skills lmao.
 
-✨ My webstie: [https://febru.me/](https://febru.me/) ✨
+✨ My website: [https://febru.me/](https://febru.me/) ✨
 
 [![forthebadge](https://forthebadge.com/images/badges/made-with-c-plus-plus.svg)](https://forthebadge.com) [![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)](https://forthebadge.com)
 
 ## Usage 🛠️
 
-Place `cppcfg.hpp` in your _include_ folder. Then place `thecppcfg.cpp` file in your _src_. Remember to change `#include "cppcfg.hpp"` in `thecppcfg.cpp` to reflect your file structure. Then, for every configuration file, create new ConfigurationFile object and pass the path to your .cfg file as an argument.
+**Installation:**
 
-If the config changes during execution of your program and you need to re-read it, just use `config.reload()` method.
+- Download the `cppcfg.hpp` file and place it in _include_ directory.
+- Download the `cppcfg.cpp` file and place it in _src_ directory.
+- Create new ConfigurationFile object like this. Values from the file will be automatically imported.
+
+```cpp
+ConfigurationFile config("config.cfg");
+ConfigurationFile settings("settings.cfg", true);
+```
+
+> NOTE: If the second parameter is true, all error messages will be suppressed.
+
+**Available methods:**
+
+- `.reload()` - Reloads values from file. Returns true if file exists, false if not.
+- `.getString(std::string key)` - Returns string value of key.
+- `.getInt(std::string key)` - Returns integer value of key.
+- `.getDouble(std::string key)` - Returns double value of key.
+- `.getFloat(std::string key)` - Returns float value of key.
+- `.getChar(std::string key)` - Returns char value of key.
+- `.getBool(std::string key)` - Returns bool value of key.
 
 ## Syntax of .cfg files 📝
 
@@ -28,6 +47,7 @@ If you want to create a config file and be able to parse it using this library, 
 - To create boolean value, just type `true` or `false`.
 - Blank lines are allowed.
 - Lines beginning with `#` symbol are treated as comments and are skipped.
+- Lines containing errors and are skipped. However, you will see an error message.
 
 If this is confusing, don't be upset. Just look at the example shown below.
 

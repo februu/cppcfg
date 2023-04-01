@@ -1,15 +1,14 @@
 #include <iostream>
 #include <unordered_map>
 #include <fstream>
-#include "cppcfg.hpp"
+#include "../include/cppcfg.hpp"
 
-ConfigurationFile::ConfigurationFile(std::string filePath)
+ConfigurationFile::ConfigurationFile(std::string filePath, bool suppressErrorMessages) : suppressErrorMessages(suppressErrorMessages), filePath(filePath)
 {
-    this->filePath = filePath;
     reload();
 }
 
-void ConfigurationFile::reload(void)
+bool ConfigurationFile::reload(void)
 {
     // Opens new file.
     std::ifstream file(filePath);
@@ -17,8 +16,9 @@ void ConfigurationFile::reload(void)
     // Checks if file exists.
     if (file.fail())
     {
-        std::cerr << "Error! Path '" << filePath << "' is invalid!\n";
-        return;
+        if (!suppressErrorMessages)
+            std::cerr << "Error! Path '" << filePath << "' is invalid!\n";
+        return false;
     }
 
     // Reads file line by line.
@@ -27,11 +27,13 @@ void ConfigurationFile::reload(void)
     while (std::getline(file, line))
     {
         if (!parseLine(line))
-            std::cerr << "Error when reading " << filePath << ". Invalid line. (Line " << lineCount << ", '" << line << "')\n";
+            if (!suppressErrorMessages)
+                std::cerr << "Error when reading " << filePath << ". Invalid line. (Line " << lineCount << ", '" << line << "')\n";
         lineCount++;
     }
 
     file.close();
+    return true;
 }
 
 bool ConfigurationFile::parseLine(std::string line)
@@ -59,7 +61,7 @@ bool ConfigurationFile::parseLine(std::string line)
             break;
         }
 
-        // Checks if key only contains a-z,A-Z,0-9.
+        // Checks if key only contains a-z,A-Z,0-9 and underscores.
         if (!((line[charCount] > 47 && line[charCount] < 58) || (line[charCount] > 64 && line[charCount] < 91) || (line[charCount] > 96 && line[charCount] < 123) || line[charCount] == 95))
             return false;
 
@@ -153,9 +155,33 @@ bool ConfigurationFile::parseLine(std::string line)
     return false;
 }
 
-double ConfigurationFile::getDouble(std::string key) { return doubles[key]; }
-float ConfigurationFile::getFloat(std::string key) { return floats[key]; }
-std::string ConfigurationFile::getString(std::string key) { return strings[key]; }
-char ConfigurationFile::getChar(std::string key) { return chars[key]; }
-int ConfigurationFile::getInt(std::string key) { return integers[key]; }
-bool ConfigurationFile::getBool(std::string key) { return bools[key]; }
+// Functions below are used to return values.
+double ConfigurationFile::getDouble(std::string key)
+{
+    return doubles[key];
+}
+
+float ConfigurationFile::getFloat(std::string key)
+{
+    return floats[key];
+}
+
+std::string ConfigurationFile::getString(std::string key)
+{
+    return strings[key];
+}
+
+char ConfigurationFile::getChar(std::string key)
+{
+    return chars[key];
+}
+
+int ConfigurationFile::getInt(std::string key)
+{
+    return integers[key];
+}
+
+bool ConfigurationFile::getBool(std::string key)
+{
+    return bools[key];
+}

@@ -11,9 +11,12 @@
 //            888      888                     Y8b d88P
 //            888      888                      "Y88P"
 //
-//              Created by febru. Version 1.0.
+//              Created by febru. Version 1.1.
 //              https://febru.me/
 //              Github: @februu
+//
+//              Distributed under MIT License
+//              Copyright (c) 2023 Kacper Lutomski
 //
 
 #pragma once
@@ -24,7 +27,8 @@ class ConfigurationFile
 {
 
 private:
-    std::string filePath;
+    const bool suppressErrorMessages;
+    const std::string filePath;
     std::unordered_map<std::string, float> doubles;
     std::unordered_map<std::string, double> floats;
     std::unordered_map<std::string, std::string> strings;
@@ -35,15 +39,28 @@ private:
     bool parseLine(std::string line);
 
 public:
-    ConfigurationFile(std::string filePath);
+    // Creates new ConfigurationFile object. Requires path to .cfg file (string) as argument. Setting the second argument to true suppresses all error messages.
+    ConfigurationFile(std::string filePath, bool suppressErrorMessages = false);
     ~ConfigurationFile(){};
 
-    void reload(void);
+    // Reloads values from file. Returns true if file exists, false if not.
+    bool reload(void);
 
+    // Get double value.
     double getDouble(std::string key);
+
+    // Get float value.
     float getFloat(std::string key);
+
+    // Get string value.
     std::string getString(std::string key);
+
+    // Get char value.
     char getChar(std::string key);
+
+    // Get integer value.
     int getInt(std::string key);
+
+    // Get boolean value.
     bool getBool(std::string key);
 };
